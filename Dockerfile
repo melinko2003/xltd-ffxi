@@ -3,8 +3,7 @@ FROM ubuntu:24.04
 # Avoid any UI since we don't have one
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Some dependencies are pulled from deadsnakes
-RUN apt clean all && apt update -y && apt install -y \
+RUN apt install -y \
 wget curl jq software-properties-common \
 # Need mariadb as per-requirements, doesn't come pre-packaged I don't think
 libmariadb3 libmariadb-dev mariadb-server \

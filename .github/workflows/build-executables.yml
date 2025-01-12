@@ -1,9 +1,9 @@
 ---
-name: "build"
+name: "build-executables"
 
 on:
   push:
-  workflow_dispatch:
+    - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
@@ -53,7 +53,6 @@ jobs:
       with:
         name: linux_executables
         path: |
-          settings
           xiloader.exe
           xi_connect
           xi_map
