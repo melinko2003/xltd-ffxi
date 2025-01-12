@@ -1,56 +1,29 @@
 #cloud-config
 # Tried on the Rpi3b+ Just doesn't love this, lol, that's ok. Lets try on a rpi4 8Gb
-hostname: rpi4b-ffxi 
+hostname: rpi4b-ffxi
 manage_etc_hosts: true
 package_update: true
 package_upgrade: true
 packages:
-- sudo
-- wget
-- curl
 - git
-- python3
-- python3-pip
+- software-properties-common 
 - cmake 
-- make
-- avahi-daemon
-- add-apt-key
-- build-essential
-- gpg
-- vim
-- g++-10
-- libluajit-5.1-dev
-- libzmq3-dev
-- libssl-dev
-- zlib1g-dev
-- libbz2-dev
+- libmariadb-dev-compat 
+- mariadb-client 
 - mariadb-server
-- libmariadb-dev
-- binutils-dev
-- libmariadb3
-- libreadline-dev
-- libsqlite3-dev
-- llvm
-- libncurses5-dev
-- libncursesw5-dev
-- libxml2-dev 
-- libxmlsec1-dev
-- xz-utils
-- tk-dev 
-- libffi-dev 
-- liblzma-dev 
-- python3-openssl
-
-apt:
-  sources:
-    mariadb:
-      source: "deb [arch=amd64,arm64] https://dlm.mariadb.com/repo/mariadb-server/11.rolling/repo/ubuntu jammy main"
-    mariadb-debug:
-      source: "deb [arch=amd64,arm64] https://dlm.mariadb.com/repo/mariadb-server/11.rolling/repo/ubuntu jammy main/debug"
-  conf: |
-    Acquire {
-      Check-Date "false";
-    };
+- libluajit-5.1-dev 
+- luarocks
+- libzmq3-dev 
+- zlib1g-dev 
+- libssl-dev 
+- binutils-dev 
+- wget
+- curl 
+- jq
+- python3.12-full
+- avahi-daemon
+- gcc-14 
+- g++-14
 
 # u/p ffxi/ffxi
 users:
@@ -68,7 +41,6 @@ keyboard:
   layout: "us"
 
 runcmd:
-- wget https://supplychain.mariadb.com/mariadb-keyring-2019.gpg -P /opt/ffxi-config/
 - git clone --recursive https://github.com/LandSandBoat/server.git /opt/ffxi
 - pip install -r /opt/ffxi/server/tools/requirements.txt
 - mysql -u root -p < /opt/ffxi/ffxi-db-init.sql

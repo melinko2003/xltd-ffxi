@@ -1,0 +1,15 @@
+---
+# ah
+name: M.H.M.U. # Name that appears on AH when buying and selling
+tick: 30 # seconds between buying
+restock: 3600 # seconds between selling
+use_buying_rates: false  # Only buy items a fraction of the time?
+use_selling_rates: false  # Only sell items a fraction of the time?
+
+# sql
+hostname: 127.0.0.1 # SQL parameter
+database: xidb # SQL parameter
+username: root # SQL parameter
+password: root # SQL parameter
+port: 3306 # SQL parameter
+fail: true # fail on SQL database errors?

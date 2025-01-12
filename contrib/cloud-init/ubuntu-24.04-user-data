@@ -1,11 +1,13 @@
 #cloud-config
 # Tried on the Rpi3b+ Just doesn't love this, lol, that's ok. Lets try on a rpi4 8Gb
-hostname: rpi4b-ffxi 
+hostname: rpi4b-ffxi
 manage_etc_hosts: true
 package_update: true
 package_upgrade: true
 packages:
-- sudo
+- software-properties-common 
+- cmake libmariadb-dev-compat libluajit-5.1-dev libzmq3-dev zlib1g-dev libssl-dev binutils-dev curl jq
+
 - wget
 - curl
 - git
@@ -40,17 +42,6 @@ packages:
 - libffi-dev 
 - liblzma-dev 
 - python3-openssl
-
-apt:
-  sources:
-    mariadb:
-      source: "deb [arch=amd64,arm64] https://dlm.mariadb.com/repo/mariadb-server/11.rolling/repo/ubuntu jammy main"
-    mariadb-debug:
-      source: "deb [arch=amd64,arm64] https://dlm.mariadb.com/repo/mariadb-server/11.rolling/repo/ubuntu jammy main/debug"
-  conf: |
-    Acquire {
-      Check-Date "false";
-    };
 
 # u/p ffxi/ffxi
 users:
