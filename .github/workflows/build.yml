@@ -24,7 +24,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y software-properties-common cmake libmariadb-dev-compat libluajit-5.1-dev libzmq3-dev zlib1g-dev libssl-dev binutils-dev
+        sudo apt-get install -y software-properties-common cmake libmariadb-dev-compat libluajit-5.1-dev libzmq3-dev zlib1g-dev libssl-dev binutils-dev curl jq
 
         # Required for 22.04 Image, remove on transition to 24.04
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
@@ -45,12 +45,15 @@ jobs:
     - name: Build
       run: |
         cmake --build build -j4
+        curl -sLO $(curl -s "https://api.github.com/repos/LandSandBoat/xiloader/releases" | jq -r '.[0].assets.[].browser_download_url')
         chmod +x xi_connect xi_map xi_search xi_world
     - name: Archive Executables
       uses: actions/upload-artifact@v4
       with:
         name: linux_executables
         path: |
+          settings
+          xiloader.exe
           xi_connect
           xi_map
           xi_search
