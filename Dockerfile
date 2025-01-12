@@ -22,7 +22,7 @@ net-tools nano git cmake make libluajit-5.1-dev libzmq3-dev libssl-dev zlib1g-de
 # Configure and build
 && mkdir docker_build && cd docker_build && cmake .. && make -j $(nproc)  && cd .. && rm -r /server/docker_build \
 # Ensure we can run the db update & startup script
-&& chmod +x ./tools/dbtool.py 
+&& chmod +x /server/tools/dbtool.py 
 # Adding + Chmod'ing your launch script
 ADD contrib/containers/update_db_then_launch.sh /server/update_db_then_launch.sh
 RUN chmod +x /server/update_db_then_launch.sh
