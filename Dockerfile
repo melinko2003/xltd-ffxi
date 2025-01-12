@@ -18,9 +18,9 @@ net-tools nano git cmake make libluajit-5.1-dev libzmq3-dev libssl-dev zlib1g-de
 # Install https://github.com/AdamGagorik/ffxiahbot
 && echo "ffxiahbot" >> /server/tools/requirements.txt \
 && python3.12 -m venv /server/.auctioneer \
-&& /server/.auctioneer/bin/python3 -m pip install --upgrade -r /server/tools/requirements.txt \
+&& /server/.auctioneer/bin/python3 -m pip install --no-cache-dir --upgrade -r /server/tools/requirements.txt \
 # Configure and build
-&& mkdir docker_build && cd docker_build && cmake .. && make -j $(nproc)  && cd .. && rm -r /server/docker_build \
+&& cd /server && mkdir docker_build && cd docker_build && cmake .. && make -j $(nproc)  && cd .. && rm -r /server/docker_build \
 # Ensure we can run the db update & startup script
 && chmod +x /server/tools/dbtool.py 
 # Adding + Chmod'ing your launch script
