@@ -47,7 +47,8 @@ jobs:
         mkdir -p build
         if [ $(uname -p) = "x86_64" ]; then 
           CFLAGS=-m64 CXXFLAGS=-m64 LDFLAGS=-m64 cmake -S . -B build
-        else
+        if  
+        if [ $(uname -p) = "aarch64"  ]; then
           cmake -S . -B build
         fi
     - name: Build
