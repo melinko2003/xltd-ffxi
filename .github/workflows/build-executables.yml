@@ -30,12 +30,11 @@ jobs:
         sudo apt-get update -y
         sudo apt-get install -y software-properties-common cmake libmariadb-dev-compat libluajit-5.1-dev \
         libzmq3-dev zlib1g-dev libssl-dev binutils-dev curl jq git gcc-14 g++-14 libgcc-14-dev gcc-14-aarch64-linux-gnu
-
     - name: Cache 'build' folder
       uses: actions/cache@v4
       with:
         path: build
-        key: ${{ runner.os }}-gcc
+        key: ${{ runner.os }}-${{ matrix.os }}-gcc
     - name: Configure CMake
       run: |
         export CC=/usr/bin/gcc-14
@@ -50,7 +49,7 @@ jobs:
     - name: Archive Executables
       uses: actions/upload-artifact@v4
       with:
-        name: linux_$(uname -r)
+        name: linux_${{ matrix.os }}_exec
         path: |
           xiloader.exe
           xi_connect
