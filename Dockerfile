@@ -15,6 +15,7 @@ RUN echo "ffxiahbot" >> /server/tools/requirements.txt \
 && export CC=/usr/bin/gcc-14 \
 && export CXX=/usr/bin/g++-14 \
 && if [ $(uname -p) = "x86_64" ]; CFLAGS=-m64 CXXFLAGS=-m64 LDFLAGS=-m64 cmake -S . -B build ; fi \
+&& if [ $(uname -p) = "aarch64" ]; sed -i '/for (const char& c : name)/,/return false;/c\    for (const char& c : name) {\n        if (!std::isprint(static_cast<unsigned char>(c))) {\n            return false;\n        }\n    }' src/map/lua/luautils.cpp ; fi \
 && if [ $(uname -p) = "aarch64"  ]; cmake -S . -B build ; fi \
 && CFLAGS=-m64 CXXFLAGS=-m64 LDFLAGS=-m64 cmake -S . -B build \
 && cmake --build build -j2 \
