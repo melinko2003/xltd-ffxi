@@ -44,13 +44,8 @@ jobs:
       run: |
         export CC=/usr/bin/gcc-14
         export CXX=/usr/bin/g++-14
-        mkdir -p build
-        if [ $(uname -p) = "x86_64" ]; then 
-          CFLAGS=-m64 CXXFLAGS=-m64 LDFLAGS=-m64 cmake -S . -B build
-        if  
-        if [ $(uname -p) = "aarch64"  ]; then
-          cmake -S . -B build
-        fi
+        if [ $(uname -p) = "x86_64" ]; then CFLAGS=-m64 CXXFLAGS=-m64 LDFLAGS=-m64 cmake -S . -B build ; fi
+        if [ $(uname -p) = "aarch64" ]; then cmake -S . -B build ; fi
     - name: Build
       run: |
         cmake --build build -j4
