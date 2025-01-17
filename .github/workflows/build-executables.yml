@@ -3,7 +3,7 @@ name: "build-executables"
 
 on:
   push:
-    - main
+    # - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
@@ -14,7 +14,10 @@ concurrency:
 
 jobs:
   Linux_GCC14_64bit:
-    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        os: [ ubuntu-24.04, ubuntu-24.04-arm ]
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout LandSandBoat server
       uses: actions/checkout@v4
@@ -42,7 +45,11 @@ jobs:
         export CC=/usr/bin/gcc-14
         export CXX=/usr/bin/g++-14
         mkdir -p build
-        CFLAGS=-m64 CXXFLAGS=-m64 LDFLAGS=-m64 cmake -S . -B build
+        if [ $(uname -p) = "x86_64" ]; then 
+          CFLAGS=-m64 CXXFLAGS=-m64 LDFLAGS=-m64 cmake -S . -B build
+        else
+          cmake -S . -B build
+        fi
     - name: Build
       run: |
         cmake --build build -j4
@@ -51,7 +58,7 @@ jobs:
     - name: Archive Executables
       uses: actions/upload-artifact@v4
       with:
-        name: linux_executables
+        name: linux_$(uname -r)
         path: |
           xiloader.exe
           xi_connect
