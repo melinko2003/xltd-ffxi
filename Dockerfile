@@ -14,7 +14,7 @@ RUN echo "ffxiahbot" >> /server/tools/requirements.txt \
 && cd /server \
 && export CC=/usr/bin/gcc-14 \
 && export CXX=/usr/bin/g++-14 \
-&& sed -i 's/if ((c >= 0 && c <= 0x20) || c >= 0x7F)/if (!std::isprint(static_cast<unsigned char>(c)))/' \
+&& sed -i 's/if ((c >= 0 && c <= 0x20) || c >= 0x7F)/if (!std::isprint(static_cast<unsigned char>(c)))/' src/map/lua/luautils.cpp \
 && if [ $(uname -p) = "x86_64" ]; CFLAGS=-m64 CXXFLAGS=-m64 LDFLAGS=-m64 cmake -S . -B build ; fi \
 && if [ $(uname -p) = "aarch64"  ]; cmake -S . -B build ; fi \
 && CFLAGS=-m64 CXXFLAGS=-m64 LDFLAGS=-m64 cmake -S . -B build \

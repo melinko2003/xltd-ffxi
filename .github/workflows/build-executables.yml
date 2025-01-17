@@ -18,6 +18,8 @@ jobs:
       matrix:
         os: [ ubuntu-24.04, ubuntu-24.04-arm ]
     runs-on: ${{ matrix.os }}
+    env:
+      DEBIAN_FRONTEND: noninteractive
     steps:
     - name: Checkout LandSandBoat server
       uses: actions/checkout@v4
@@ -39,7 +41,7 @@ jobs:
       run: |
         export CC=/usr/bin/gcc-14
         export CXX=/usr/bin/g++-14
-        sed -i 's/if ((c >= 0 && c <= 0x20) || c >= 0x7F)/if (!std::isprint(static_cast<unsigned char>(c)))/'
+        sed -i 's/if ((c >= 0 && c <= 0x20) || c >= 0x7F)/if (!std::isprint(static_cast<unsigned char>(c)))/' src/map/lua/luautils.cpp
         if [ $(uname -p) = "x86_64" ]; then CFLAGS=-m64 CXXFLAGS=-m64 LDFLAGS=-m64 cmake -S . -B build ; fi
         if [ $(uname -p) = "aarch64" ]; then cmake -S . -B build ; fi
     - name: Build
