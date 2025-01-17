@@ -1,0 +1,87 @@
+#cloud-config
+# Tried on the Rpi3b+ Just doesn't love this, lol, that's ok. Lets try on a rpi4 8Gb
+hostname: rpi4b-ffxi
+manage_etc_hosts: true
+package_update: true
+package_upgrade: true
+packages:
+- software-properties-common 
+- cmake libmariadb-dev-compat libluajit-5.1-dev libzmq3-dev zlib1g-dev libssl-dev binutils-dev curl jq
+
+- wget
+- curl
+- git
+- python3
+- python3-pip
+- cmake 
+- make
+- avahi-daemon
+- add-apt-key
+- build-essential
+- gpg
+- vim
+- g++-10
+- libluajit-5.1-dev
+- libzmq3-dev
+- libssl-dev
+- zlib1g-dev
+- libbz2-dev
+- mariadb-server
+- libmariadb-dev
+- binutils-dev
+- libmariadb3
+- libreadline-dev
+- libsqlite3-dev
+- llvm
+- libncurses5-dev
+- libncursesw5-dev
+- libxml2-dev 
+- libxmlsec1-dev
+- xz-utils
+- tk-dev 
+- libffi-dev 
+- liblzma-dev 
+- python3-openssl
+
+# u/p ffxi/ffxi
+users:
+- name: ffxi
+  groups: users,adm,dialout,audio,netdev,video,plugdev,cdrom,games,input,gpio,spi,i2c,render,sudo
+  shell: /bin/bash
+  lock_passwd: false
+  passwd: $5$CoC9MJgKG3$/TNxiamPon/2hrsIr1jSSoNY5mW/K0jfZXgHJCCS8gA
+
+ssh_pwauth: true
+
+timezone: America/Denver
+keyboard:
+  model: pc105
+  layout: "us"
+
+runcmd:
+- wget https://supplychain.mariadb.com/mariadb-keyring-2019.gpg -P /opt/ffxi-config/
+- git clone --recursive https://github.com/LandSandBoat/server.git /opt/ffxi
+- pip install -r /opt/ffxi/server/tools/requirements.txt
+- mysql -u root -p < /opt/ffxi/ffxi-db-init.sql
+
+write_files:
+- content: |
+    ffxi  ALL=(ALL) NOPASSWD: /usr/bin/apt-key *
+  path: /etc/sudoers.d/ffxi
+- content: |
+    CREATE USER 'xi_rw_user'@'localhost' IDENTIFIED BY 'xi_rw_user_pw';
+    CREATE USER 'xi_ro_user'@'localhost' IDENTIFIED BY 'xi_ro_user_pw';
+    CREATE USER 'xi_ro_user'@'%' IDENTIFIED BY 'xi_ro_user_pw';
+    CREATE USER 'xi_rw_admin'@'localhost' IDENTIFIED BY 'xi_rw_admin_pw';
+    CREATE DATABASE ffxidb;
+    USE ffxidb;
+    GRANT ALL PRIVILEGES ON ffxidb.* TO 'xi_rw_user'@'localhost';
+    GRANT ALL PRIVILEGES ON ffxidb.* TO 'xi_rw_admin'@'localhost';
+    GRANT SELECT ON ffxidb.* TO 'xi_ro_user'@'localhost';
+    GRANT SELECT ON ffxidb.* TO 'xi_ro_user'@'%';
+    FLUSH PRIVILEGES;
+    show GRANTS FOR 'xi_ro_user'@'localhost';
+    show GRANTS FOR 'xi_ro_user'@'%';
+    show GRANTS FOR 'xi_rw_user'@'localhost';
+    show GRANTS FOR 'xi_rw_admin'@'localhost';
+  path: /opt/ffxi/ffxi-db-init.sql
