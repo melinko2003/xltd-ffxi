@@ -31,4 +31,4 @@ echo "starting xi_world"
 
 sleep 5 
 echo "starting up the Auctioneer."
-/server/.auctioneer/bin/python3 -m ffxiahbot broker --config /server/settings/config.yaml --inp-csv /server/settings/items.csv --buy-items --sell-item
+/server/.auctioneer/bin/python3 -m ffxiahbot broker --config /server/settings/config.yaml --inp-csv /server/settings/items.csv --buy-items --sell-items

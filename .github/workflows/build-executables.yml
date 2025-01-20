@@ -1,9 +1,14 @@
 ---
 name: "build-executables"
 
+# Configures this workflow
 on:
+  pull_request:
+    types: [ opened, edited, synchronize ]
+
   push:
-    # - main
+    branches: 
+        - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
@@ -34,6 +39,8 @@ jobs:
         libzmq3-dev zlib1g-dev libssl-dev binutils-dev curl jq git gcc-14 g++-14 libgcc-14-dev
     - name: Configure CMake
       run: |
+        SHORT_HASH=$(git rev-parse --short HEAD)
+        echo "LSB_SHORT_HASH=$SHORT_HASH" >> $GITHUB_ENV
         export CC=/usr/bin/gcc-14
         export CXX=/usr/bin/g++-14
         sed -i 's/if ((c >= 0 && c <= 0x20) || c >= 0x7F)/if (!std::isprint(static_cast<unsigned char>(c)))/' src/map/lua/luautils.cpp
@@ -47,7 +54,7 @@ jobs:
     - name: Archive Executables
       uses: actions/upload-artifact@v4
       with:
-        name: linux_${{ matrix.os }}_exec
+        name: linux_${{ matrix.os }}_$LSB_SHORT_HASH
         path: |
           xiloader.exe
           xi_connect

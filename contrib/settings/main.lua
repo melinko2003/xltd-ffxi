@@ -12,7 +12,7 @@ xi.settings = xi.settings or {}
 xi.settings.main =
 {
     -- Server name (not longer than 15 characters)
-    SERVER_NAME = "Nameless",
+    SERVER_NAME = "XLTD-FFXI",
 
     SERVER_MESSAGE =
         "Please visit https://github.com/LandSandBoat/server for the latest information on the project.\n" ..
@@ -89,7 +89,7 @@ xi.settings.main =
     -- Retail droprate = 0.1 (10%) with no other effects active
     -- Set to 0 to disable caskets.
     -- max is clamped to 1.0 (100%)
-    CASKET_DROP_RATE = 0.1,
+    CASKET_DROP_RATE = 1.0,
 
     -- Abyssea lights
     -- certain mobs that reduces the drop rate automatically depending on the light.
@@ -107,7 +107,7 @@ xi.settings.main =
     NORMAL_MOB_MAX_LEVEL_RANGE_MIN = 0,  -- Lower Bound of Max Level Range for Normal Mobs (0 = Uncapped)
     NORMAL_MOB_MAX_LEVEL_RANGE_MAX = 0,  -- Upper Bound of Max Level Range for Normal Mobs (0 = Uncapped)
     START_GIL                      = 1000000, -- Amount of gil given to newly created characters.
-    START_INVENTORY                = 30, -- Starting inventory and satchel size.  Ignores values < 30.  Do not set above 80!
+    START_INVENTORY                = 50, -- Starting inventory and satchel size.  Ignores values < 30.  Do not set above 80!
     NEW_CHARACTER_CUTSCENE         = 1,  -- Set to 1 to enable opening cutscenes, 0 to disable.
     SUBJOB_QUEST_LEVEL             = 18, -- Minimum level to accept either subjob quest.  Set to 0 to start the game with subjobs unlocked.
     ADVANCED_JOB_LEVEL             = 30, -- Minimum level to accept advanced job quests.  Set to 0 to start the game with advanced jobs.
@@ -157,14 +157,14 @@ xi.settings.main =
         "\129\153\129\154 The Alter Ego Expo Campaign is active! \129\154\129\153\n" ..
         "Trusts gain the benefits of Increased HP, MP, and Status Resistances!",
 
-    HARVESTING_BREAK_CHANCE = 33, -- % chance for the sickle to break during harvesting.  Set between 0 and 100.
-    EXCAVATION_BREAK_CHANCE = 33, -- % chance for the pickaxe to break during excavation.  Set between 0 and 100.
-    LOGGING_BREAK_CHANCE    = 33, -- % chance for the hatchet to break during logging.  Set between 0 and 100.
-    MINING_BREAK_CHANCE     = 33, -- % chance for the pickaxe to break during mining.  Set between 0 and 100.
-    HARVESTING_RATE         = 50, -- % chance to recieve an item from haresting.  Set between 0 and 100.
-    EXCAVATION_RATE         = 50, -- % chance to recieve an item from excavation.  Set between 0 and 100.
-    LOGGING_RATE            = 50, -- % chance to recieve an item from logging.  Set between 0 and 100.
-    MINING_RATE             = 50, -- % chance to recieve an item from mining.  Set between 0 and 100.
+    HARVESTING_BREAK_CHANCE = 100, -- % chance for the sickle to break during harvesting.  Set between 0 and 100.
+    EXCAVATION_BREAK_CHANCE = 100, -- % chance for the pickaxe to break during excavation.  Set between 0 and 100.
+    LOGGING_BREAK_CHANCE    = 100, -- % chance for the hatchet to break during logging.  Set between 0 and 100.
+    MINING_BREAK_CHANCE     = 100, -- % chance for the pickaxe to break during mining.  Set between 0 and 100.
+    HARVESTING_RATE         = 100, -- % chance to recieve an item from haresting.  Set between 0 and 100.
+    EXCAVATION_RATE         = 100, -- % chance to recieve an item from excavation.  Set between 0 and 100.
+    LOGGING_RATE            = 100, -- % chance to recieve an item from logging.  Set between 0 and 100.
+    MINING_RATE             = 100, -- % chance to recieve an item from mining.  Set between 0 and 100.
     DIGGING_RATE            = 85, -- % chance to receive an item from chocbo digging during favorable weather.  Set between 0 and 100.
 
     HEALING_TP_CHANGE       = -100, -- Change in TP for each healing tick. Default is -100
@@ -177,9 +177,9 @@ xi.settings.main =
     CHEST_MIN_ILLUSION_TIME  = 1800,  -- 30 minutes
 
     -- Multiplier to NM lottery spawn chance. (Default 1.0) eg. 0 = disable lottery spawns. -1 for always 100% chance.
-    NM_LOTTERY_CHANCE = 1.0,
+    NM_LOTTERY_CHANCE = -1,
     -- Multiplier to NM lottery cooldown time (Default 1.0) eg. 2.0 = twice as long. 0 = no cooldowns.
-    NM_LOTTERY_COOLDOWN = 1.0,
+    NM_LOTTERY_COOLDOWN = 0,
 
     -- GARRISON SETTINGS
     ENABLE_GARRISON        = true,  -- If true, enables garrison functionality
