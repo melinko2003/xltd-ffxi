@@ -1,0 +1,16 @@
+[Unit]
+Description=xi Connect Server
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/server
+Restart=on-failure
+ExecStart=/opt/server/xi_connect --log /var/log/ffxi-connect-server.log
+TimeoutSec=30
+RestartSec=15s
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
