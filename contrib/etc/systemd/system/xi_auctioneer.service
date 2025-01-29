@@ -1,0 +1,16 @@
+[Unit]
+Description=xi Auctioneer Bot
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/server
+Restart=on-failure
+ExecStart=/opt/server/.auctioneer/bin/python3 -m ffxiahbot broker --config /opt/server/settings/config.yaml --inp-csv /opt/server/settings/items.csv --buy-items --sell-items
+TimeoutSec=30
+RestartSec=15s
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

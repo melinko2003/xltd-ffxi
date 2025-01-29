@@ -1,9 +1,10 @@
 ---
 name: "build-executables"
 
+# Configures this workflow
 on:
-  push:
-    # - main
+  pull_request:
+    types: [ opened, edited, synchronize ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
@@ -32,8 +33,16 @@ jobs:
         sudo apt-get update -y
         sudo apt-get install -y software-properties-common cmake libmariadb-dev-compat libluajit-5.1-dev \
         libzmq3-dev zlib1g-dev libssl-dev binutils-dev curl jq git gcc-14 g++-14 libgcc-14-dev
+    - name: Cache 'build' folder
+      uses: actions/cache@v4
+      with:
+        path: build
+        key: ${{ matrix.os }}-GCC14-64bit
     - name: Configure CMake
       run: |
+        echo "LSB_SHORT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        echo "OS_ARCH_TYPE=$(uname -p)" >> $GITHUB_ENV
+        echo "OS_TYPE=$(uname)" >> $GITHUB_ENV
         export CC=/usr/bin/gcc-14
         export CXX=/usr/bin/g++-14
         sed -i 's/if ((c >= 0 && c <= 0x20) || c >= 0x7F)/if (!std::isprint(static_cast<unsigned char>(c)))/' src/map/lua/luautils.cpp
@@ -47,7 +56,7 @@ jobs:
     - name: Archive Executables
       uses: actions/upload-artifact@v4
       with:
-        name: linux_${{ matrix.os }}_exec
+        name: ${{ env.OS_TYPE }}_${{ env.LSB_SHORT_HASH }}_${{ env.OS_ARCH_TYPE }}
         path: |
           xiloader.exe
           xi_connect
