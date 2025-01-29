@@ -25,7 +25,7 @@ jobs:
       - name: List open PRs and check if version exists
         id: check_pr
         run: |
-          PR_EXISTS=$(gh pr list --repo ${{ github.repository }} --json title --jq ".[] | select(.title == '${{ env.VERSION }}') | .title")
+          PR_EXISTS=$(gh pr list --repo ${{ github.repository }} --search ${{ env.VERSION }} -s all --json title --jq ".[].title" )
           if [ -n "$PR_EXISTS" ]; then
             echo "PR_FOUND=true" >> $GITHUB_ENV
           else
