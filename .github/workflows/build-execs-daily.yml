@@ -10,16 +10,23 @@ jobs:
   check-version:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Checkout LandSandBoat Server
         uses: actions/checkout@v4
         with:
           repository: LandSandBoat/server
           # submodules: 'recursive' / Not TODAY!
           fetch-depth: 1
+          path: 'lite_server'
 
       - name: Extract Git Version
         run: |
+          pushd lite_server
           VERSION=$(git log -1 --pretty=format:"%h")
+          popd
+          rm -rf lite_server
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: List open PRs and check if version exists
