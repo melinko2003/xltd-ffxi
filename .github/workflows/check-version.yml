@@ -1,10 +1,10 @@
-name: Sync External Repo Version
+---
+name: "check-version"
 
 on:
   schedule:
     - cron: "0 3 * * *"  # Runs nightly at 3 AM UTC
   workflow_dispatch:  # Allows manual execution
-  push:
 
 permissions:
   contents: write
