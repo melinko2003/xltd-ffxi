@@ -4,7 +4,6 @@ on:
   schedule:
     - cron: "0 3 * * *"  # Runs nightly at 3 AM UTC
   workflow_dispatch:  # Allows manual execution
-  push:
 
 permissions:
   contents: write
@@ -48,13 +47,14 @@ jobs:
       - name: Create PR if version doesn't exist
         if: env.PR_FOUND == 'false'
         run: |
+          git checkout main
+          git pull origin main
           git checkout -b lsb-ffxi-${{ env.VERSION }}
           echo "${{ env.VERSION }}" > VERSION.txt
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add VERSION.txt
           git commit -m "Update to version ${{ env.VERSION }}"
-          git push origin lsb-ffxi-${{ env.VERSION }}
-          gh pr create --repo ${{ github.repository }} --head lsb-ffxi-${{ env.VERSION }} --title "${{ env.VERSION }}" --body "Auto-created PR for version ${{ env.VERSION }}"
+          gh pr create --repo ${{ github.repository }} --head lsb-ffxi-${{ env.VERSION }} --title "${{ env.VERSION }}" --body "Auto-created PR for version ${{ env.VERSION }}" --fill
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

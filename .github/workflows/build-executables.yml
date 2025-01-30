@@ -5,6 +5,7 @@ name: "build-executables"
 on:
   pull_request:
     types: [ opened, synchronize ]
+    #    types: [ opened, edited, synchronize ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
