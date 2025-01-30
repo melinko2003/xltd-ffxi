@@ -3,8 +3,13 @@ name: "build-executables"
 
 # Configures this workflow
 on:
+  push: 
+    branches:
+      - main
   pull_request:
+    # types: [ opened, synchronize ]
     types: [ opened, edited, synchronize ]
+  workflow_dispatch:  # Allows manual execution
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}

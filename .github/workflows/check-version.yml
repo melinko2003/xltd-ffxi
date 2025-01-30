@@ -1,0 +1,61 @@
+---
+name: "check-version"
+
+on:
+  schedule:
+    - cron: "0 3 * * *"  # Runs nightly at 3 AM UTC
+  workflow_dispatch:  # Allows manual execution
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Checkout LandSandBoat Server
+        uses: actions/checkout@v4
+        with:
+          repository: LandSandBoat/server
+          # submodules: 'recursive' / Not TODAY!
+          fetch-depth: 1
+          path: 'lite_server'
+
+      - name: Extract Git Version
+        run: |
+          pushd lite_server
+          VERSION=$(git log -1 --pretty=format:"%h")
+          popd
+          rm -rf lite_server
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: List open PRs and check if version exists
+        id: check_pr
+        run: |
+          PR_EXISTS=$(gh pr list --repo ${{ github.repository }} --search ${{ env.VERSION }} -s all --json title --jq ".[].title" )
+          if [ -n "$PR_EXISTS" ]; then
+            echo "PR_FOUND=true" >> $GITHUB_ENV
+          else
+            echo "PR_FOUND=false" >> $GITHUB_ENV
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create PR if version doesn't exist
+        if: env.PR_FOUND == 'false'
+        run: |
+          git checkout main
+          git pull origin main
+          git checkout -b lsb-ffxi-${{ env.VERSION }}
+          echo "${{ env.VERSION }}" > VERSION.txt
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add VERSION.txt
+          git commit -m "Update to version ${{ env.VERSION }}"
+          gh pr create --repo ${{ github.repository }} --head lsb-ffxi-${{ env.VERSION }} --title "${{ env.VERSION }}" --body "Auto-created PR for version ${{ env.VERSION }}" --fill
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
