@@ -54,6 +54,7 @@ jobs:
           echo "${{ env.VERSION }}" > VERSION.txt
           git add VERSION.txt
           git commit -m "Update to version ${{ env.VERSION }}"
-          gh pr create --base main --head lsb_ffxi_${{ env.VERSION }} --fill
+          # gh pr create --base main --head feature-branch --title "My Feature Update" --body "Detailed description of changes made in this feature branch."
+          gh pr create --base main --head ${{ env.VERSION }} --fill
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
