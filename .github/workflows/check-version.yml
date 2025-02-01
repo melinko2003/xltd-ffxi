@@ -51,6 +51,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+          git fetch --all
           git checkout main
           git checkout -b lsb-ffxi-${{ env.VERSION }}
           echo "${{ env.VERSION }}" > VERSION.txt
@@ -58,6 +59,7 @@ jobs:
           git add VERSION.txt VERSION_CHANGELOG.txt
           git commit -m "Update to version ${{ env.VERSION }}"
           git push origin lsb-ffxi-${{ env.VERSION }}
-          # gh pr create --base main --head lsb-ffxi-${{ env.VERSION }} --title "Ffxi LSB v${{ env.VERSION }}" --body "Update to version ${{ env.VERSION }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# gh pr create --base main --head lsb-ffxi-${{ env.VERSION }} --title "Ffxi LSB v${{ env.VERSION }}" --body "Update to version ${{ env.VERSION }}"
