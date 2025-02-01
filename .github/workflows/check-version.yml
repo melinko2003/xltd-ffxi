@@ -49,11 +49,23 @@ jobs:
       - name: Create PR if version doesn't exist
         if: env.PR_FOUND == 'false'
         run: |
+          # Configure
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          echo "${{ env.VERSION }}" > VERSION.txt
-          git add VERSION.txt
+          # Grabs All branches
+          git fetch --all
+          # Checks out the Base/Main Branch
+          git checkout main
+          # Create a new branch for remotes
+          git checkout -b lsb-ffxi-${{ env.VERSION }}
+          # Create & Add our assets
+          echo "${{ env.VERSION }}" > VERSION
+          echo "Version: ${{ env.VERSION }} Date: $(date)" >> VERSION_CHANGELOG
+          git add VERSION.txt VERSION_CHANGELOG.txt
+          # Commit our Branch to our Remote
           git commit -m "Update to version ${{ env.VERSION }}"
+          git push origin lsb-ffxi-${{ env.VERSION }}
+          # Open the PR ?
           gh pr create --base main --head lsb-ffxi-${{ env.VERSION }} --title "Ffxi LSB v${{ env.VERSION }}" --body "Update to version ${{ env.VERSION }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
