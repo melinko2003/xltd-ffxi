@@ -26,7 +26,7 @@ RUN cd /server && echo $(git log -1 --pretty=format:"%h") > /opt/VERSION
 FROM ubuntu:24.04
 COPY --from=build /opt /opt
 ADD contrib/settings /opt/settings
-ADD contrib/scripts/update_then_launch.sh /opt/update_then_launch.sh
+ADD contrib/containers/update_then_launch.sh /opt/update_then_launch.sh
 RUN chmod +x /opt/update_then_launch.sh /opt/$(uname -p)/*
 
 CMD ["/opt/update_then_launch.sh", "$(cat /opt/VERSION)"]
