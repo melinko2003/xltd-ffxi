@@ -1,11 +1,10 @@
 ---
-name: "check-version"
+name: "check-lsb-version"
 
 on:
   schedule:
     - cron: "0 3 * * *"  # Runs nightly at 3 AM UTC
   workflow_dispatch:  # Allows manual execution
-  push:
 
 permissions:
   contents: write
@@ -27,6 +26,7 @@ jobs:
           path: 'lite_server'
 
       - name: Extract Git Version
+        id: git_version
         run: |
           pushd lite_server
           VERSION=$(git log -1 --pretty=format:"%h")
@@ -34,8 +34,24 @@ jobs:
           rm -rf lite_server
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: List open PRs and check if version exists
-        id: check_pr
+      - name: Config git
+        id: cfg_git
+        run: |
+          # Configure
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+        
+      - name: Reset to Main Branch
+        id: main_branch
+        run: |
+          # Grabs All branches
+          git fetch --all
+          # Checks out the Base/Main Branch
+          git checkout main
+          # Create a new branch for remotes
+
+      - name: Branch Decision point
+        id: decision_branch
         run: |
           PR_EXISTS=$(gh pr list --repo ${{ github.repository }} --search ${{ env.VERSION }} -s all --json title --jq ".[].title" )
           if [ -n "$PR_EXISTS" ]; then
@@ -46,24 +62,22 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create PR if version doesn't exist
+      - name: Build Asset Commit
         if: env.PR_FOUND == 'false'
         run: |
-          # Configure
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          # Grabs All branches
-          git fetch --all
-          # Checks out the Base/Main Branch
-          git checkout main
           # Create a new branch for remotes
           git checkout -b lsb-ffxi-${{ env.VERSION }}
           # Create & Add our assets
           echo "${{ env.VERSION }}" > VERSION
           echo "Version: ${{ env.VERSION }} Date: $(date)" >> VERSION_CHANGELOG
-          git add VERSION.txt VERSION_CHANGELOG.txt
-          # Commit our Branch to our Remote
+          git add VERSION VERSION_CHANGELOG
+          # Commit Materials
           git commit -m "Update to version ${{ env.VERSION }}"
+
+      - name: Create PR if version doesn't exist in PRs
+        if: env.PR_FOUND == 'false'
+        run: |
+          # Commit our Branch to our Remote
           git push origin lsb-ffxi-${{ env.VERSION }}
           # Open the PR ?
           gh pr create --base main --head lsb-ffxi-${{ env.VERSION }} --title "Ffxi LSB v${{ env.VERSION }}" --body "Update to version ${{ env.VERSION }}"
