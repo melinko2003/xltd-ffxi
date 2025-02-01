@@ -3,7 +3,10 @@ Ephemeral LSB FFXI Private Server builds. Idea is to Make a server we can "rotat
   
 My use case:  
 I'm a traveling IT guy. It would be nice to have an all-in-one system that includes, game, client, backup of current dats, HD Dats, and patches and enough to get me going on the road.  
-  
+
+## Auctioneer Container
+I've moved the Auctioneer to [auctioneer-xi](https://github.com/melinko2003/auctioneer-xi)
+
 ## Points of improvement 
 * Write a dynamic IP resetting script so it sets the ip the system on start up, re-checks, sets it, notifies the server, and then restarts it. 
 
