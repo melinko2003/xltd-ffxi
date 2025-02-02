@@ -3,7 +3,7 @@ name: "check-lsb-version"
 
 on:
   schedule:
-    - cron: "0 3 * * *"  # Runs nightly at 3 AM UTC
+    - cron: "0 0,4,20 * * *"  # Runs over 8 hours, and then rests. 
   workflow_dispatch:  # Allows manual execution
 
 permissions:
@@ -81,5 +81,6 @@ jobs:
           git push origin lsb-ffxi-${{ env.VERSION }}
           # Open the PR ?
           gh pr create --base main --head lsb-ffxi-${{ env.VERSION }} --title "Ffxi LSB v${{ env.VERSION }}" --body "Update to version ${{ env.VERSION }}"
+          gh workflow run build-executables.yml --ref lsb-ffxi-${{ env.VERSION }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

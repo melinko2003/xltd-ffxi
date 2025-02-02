@@ -8,7 +8,7 @@ on:
       - main
   pull_request:
     # types: [ opened, synchronize ]
-    types: [ opened, edited, synchronize ]
+    types: [ opened, reopened, synchronize ]
   workflow_dispatch:  # Allows manual execution
 
 concurrency:
@@ -62,12 +62,15 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ env.OS_TYPE }}_${{ env.LSB_SHORT_HASH }}_${{ env.OS_ARCH_TYPE }}
+        retention-days: 4
+        overwrite: true
         path: |
           xiloader.exe
           xi_connect
           xi_map
           xi_search
           xi_world
+
 
   # Full_Startup_Checks_Linux:
   #   runs-on: ubuntu-24.04
