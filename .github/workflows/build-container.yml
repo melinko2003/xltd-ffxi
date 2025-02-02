@@ -5,10 +5,13 @@ name: "build-container"
 # on:
 #   pull_request:
 #     types: [ opened, edited, synchronize ]
+#   push:
+#     branches:
+#       - main
+
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [published]
   workflow_dispatch:  # Allows manual execution
 
 # Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
