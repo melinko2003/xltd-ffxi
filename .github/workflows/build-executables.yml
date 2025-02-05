@@ -84,6 +84,8 @@ jobs:
       if: ${{ github.ref_name != 'main' }}
       run: |
         gh pr comment --body "${{ env.OS_TYPE }}_${{ env.LSB_SHORT_HASH }}_${{ env.OS_ARCH_TYPE }}: ${{ steps.artifact-upload-step.outputs.artifact-url }}"
+      env:
+        GH_TOKEN: ${{ github.token }}
     
     - name: Archive Main Executables
       if: ${{ github.ref_name == 'main' }}
