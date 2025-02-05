@@ -37,7 +37,7 @@ jobs:
         
     - name: Get Version
       run: |
-        push xltdp
+        pushd xltdp
         echo "GIT_BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
         popd
         rm -rf xltdp
