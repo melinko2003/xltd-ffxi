@@ -30,18 +30,6 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-    - name: Git Branch for Commit
-      uses: actions/checkout@v4
-      with:
-        path: xltdp
-        
-    - name: Get Version
-      run: |
-        pushd xltdp
-        echo "GIT_BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
-        popd
-        rm -rf xltdp
-    
     - name: Checkout LandSandBoat server
       uses: actions/checkout@v4
       with:
@@ -95,8 +83,9 @@ jobs:
     - name: Append Run 
       if: ${{ github.ref_name != 'main' }}
       run: |
-        gh pr comment ${{ env.GIT_BRANCH }} --body "${{ env.OS_TYPE }}_${{ env.LSB_SHORT_HASH }}_${{ env.OS_ARCH_TYPE }}: ${{ steps.artifact-upload-step.outputs.artifact-url }}"
+        gh pr comment ${{ env.PR_NUMBER }} --body "${{ env.OS_TYPE }}_${{ env.LSB_SHORT_HASH }}_${{ env.OS_ARCH_TYPE }}: ${{ steps.artifact-upload-step.outputs.artifact-url }}"
       env:
+        PR_NUMBER: ${{ github.event.number }}
         GH_TOKEN: ${{ github.token }}
     
     - name: Archive Main Executables
