@@ -36,6 +36,11 @@ jobs:
         repository: LandSandBoat/server
         submodules: 'recursive'
         fetch-depth: 1
+        
+    - name: Checkout For Git Comment
+      uses: actions/checkout@v4
+      with:
+        path: xltd
 
     - name: Install Dependencies
       run: |
@@ -83,6 +88,7 @@ jobs:
     - name: Append Run 
       if: ${{ github.ref_name != 'main' }}
       run: |
+        cd xltd
         gh pr comment --body "${{ env.OS_TYPE }}_${{ env.LSB_SHORT_HASH }}_${{ env.OS_ARCH_TYPE }}: ${{ steps.artifact-upload-step.outputs.artifact-url }}"
       env:
         GH_TOKEN: ${{ github.token }}
