@@ -7,13 +7,17 @@ on:
     branches:
       - main
   pull_request:
-    # types: [ opened, synchronize ]
+    # types: [ opened, edited, reopened, synchronize ]
     types: [ opened, reopened, synchronize ]
   workflow_dispatch:  # Allows manual execution
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
   cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
 
 # Available machines:
 # https://github.com/actions/runner-images/tree/main
@@ -66,7 +70,7 @@ jobs:
         chmod +x xi_connect xi_map xi_search xi_world
 
     - name: Archive PR Executables
-      if: ! ${{ github.ref }} == 'main'
+      if: ${{ github.ref_name != 'main' }}
       uses: actions/upload-artifact@v4
       id: artifact-upload-step
       with:
@@ -80,18 +84,21 @@ jobs:
           xi_search
           xi_world
 
-    - name: Append Run 
-      if: ! ${{ github.ref }} == 'main'
+    - name: Append Executables information
+      if: ${{ github.ref_name != 'main' }}
       run: |
-        gh pr comment --body "${{ env.OS_TYPE }}_${{ env.LSB_SHORT_HASH }}_${{ env.OS_ARCH_TYPE }}: ${{ steps.artifact-upload-step.outputs.artifact-url }}"
+        gh pr comment ${{ env.PR_NUMBER }} --repo ${{ github.repository }} --body "${{ env.OS_TYPE }}_${{ env.LSB_SHORT_HASH }}_${{ env.OS_ARCH_TYPE }}: ${{ steps.artifact-upload-step.outputs.artifact-url }}"
+      env:
+        PR_NUMBER: ${{ github.event.number }}
+        GH_TOKEN: ${{ github.token }}
     
     - name: Archive Main Executables
-      if: ${{ github.ref }} == 'main'
+      if: ${{ github.ref_name == 'main' }}
       uses: actions/upload-artifact@v4
       id: artifact-upload-main
       with:
         name: ${{ env.OS_TYPE }}_${{ env.LSB_SHORT_HASH }}_${{ env.OS_ARCH_TYPE }}
-        retention-days: 7
+        retention-days: 5
         overwrite: true
         path: |
           xiloader.exe
