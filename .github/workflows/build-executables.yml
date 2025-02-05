@@ -8,7 +8,7 @@ on:
       - main
   pull_request:
     # types: [ opened, synchronize ]
-    types: [ opened, reopened, synchronize ]
+    types: [ opened, edited, reopened, synchronize ]
   workflow_dispatch:  # Allows manual execution
 
 concurrency:
@@ -36,11 +36,6 @@ jobs:
         repository: LandSandBoat/server
         submodules: 'recursive'
         fetch-depth: 1
-        
-    - name: Checkout For Git Comment
-      uses: actions/checkout@v4
-      with:
-        path: xltd
 
     - name: Install Dependencies
       run: |
@@ -88,8 +83,8 @@ jobs:
     - name: Append Run 
       if: ${{ github.ref_name != 'main' }}
       run: |
-        cd xltd
-        gh pr comment --body "${{ env.OS_TYPE }}_${{ env.LSB_SHORT_HASH }}_${{ env.OS_ARCH_TYPE }}: ${{ steps.artifact-upload-step.outputs.artifact-url }}"
+        echo "GIT_BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
+        gh pr comment ${{ env.GIT_BRANCH }} --body "${{ env.OS_TYPE }}_${{ env.LSB_SHORT_HASH }}_${{ env.OS_ARCH_TYPE }}: ${{ steps.artifact-upload-step.outputs.artifact-url }}"
       env:
         GH_TOKEN: ${{ github.token }}
     
